@@ -7,23 +7,17 @@ M.keys = {
   -- ========================================== --
   {
     '<leader>ff',
-    function()
-      require('telescope.builtin').find_files()
-    end,
+    function() require('telescope.builtin').find_files() end,
     desc = 'Find Files',
   },
   {
     '<leader>fa',
-    function()
-      require('telescope.builtin').find_files { follow = true, no_ignore = true, hidden = true }
-    end,
+    function() require('telescope.builtin').find_files { follow = true, no_ignore = true, hidden = true } end,
     desc = 'Find All (Hidden/Ignored)',
   },
   {
     '<leader><leader>',
-    function()
-      require('telescope.builtin').buffers()
-    end,
+    function() require('telescope.builtin').buffers() end,
     desc = 'Find Buffers',
   },
 
@@ -32,16 +26,12 @@ M.keys = {
   -- ========================================== --
   {
     '<leader>fw',
-    function()
-      require('telescope.builtin').grep_string()
-    end,
+    function() require('telescope.builtin').grep_string() end,
     desc = 'Find Current Word',
   },
   {
     '<leader>fg',
-    function()
-      require('telescope.builtin').live_grep()
-    end,
+    function() require('telescope.builtin').live_grep() end,
     desc = 'Grep (Root Dir)',
   },
   {
@@ -67,37 +57,27 @@ M.keys = {
   -- ========================================== --
   {
     '<leader>fh',
-    function()
-      require('telescope.builtin').help_tags()
-    end,
+    function() require('telescope.builtin').help_tags() end,
     desc = 'Find Help',
   },
   {
     '<leader>fk',
-    function()
-      require('telescope.builtin').keymaps()
-    end,
+    function() require('telescope.builtin').keymaps() end,
     desc = 'Find Keymaps',
   },
   {
     '<leader>fd',
-    function()
-      require('telescope.builtin').diagnostics()
-    end,
+    function() require('telescope.builtin').diagnostics() end,
     desc = 'Find Diagnostics',
   },
   {
     '<leader>fr',
-    function()
-      require('telescope.builtin').resume()
-    end,
+    function() require('telescope.builtin').resume() end,
     desc = 'Resume Last Search',
   },
   {
     '<leader>fn',
-    function()
-      require('telescope.builtin').find_files { cwd = vim.fn.stdpath 'config' }
-    end,
+    function() require('telescope.builtin').find_files { cwd = vim.fn.stdpath 'config' } end,
     desc = 'Search Neovim Config',
   },
 
@@ -132,9 +112,7 @@ M.keys = {
             local selection = action_state.get_selected_entry()
 
             -- Open Oil at that specific path
-            if selection then
-              require('oil').open(selection.path)
-            end
+            if selection then require('oil').open(selection.path) end
           end)
           return true
         end,
@@ -144,9 +122,7 @@ M.keys = {
   },
   {
     '<leader>f.',
-    function()
-      require('telescope').extensions.frecency.frecency {}
-    end,
+    function() require('telescope').extensions.frecency.frecency {} end,
   },
   {
     '<leader>fc',

@@ -1,9 +1,7 @@
 local M = {}
 local overseer_opts = {
   new_task_opts = {},
-  on_new_task = function(task)
-    require('overseer').open { enter = false, direction = 'bottom' }
-  end, -- a function that gets overseer.Task when it is created, before calling `task:start`
+  on_new_task = function(task) require('overseer').open { enter = false, direction = 'bottom' } end, -- a function that gets overseer.Task when it is created, before calling `task:start`
 }
 M.get_opts = function()
   local osys = require 'cmake-tools.osys'
@@ -19,9 +17,7 @@ M.get_opts = function()
     --       ${kitGenerator}
     --       ${variant:xx}
     cmake_build_directory = function()
-      if osys.iswin32 then
-        return 'out\\${variant:buildType}'
-      end
+      if osys.iswin32 then return 'out\\${variant:buildType}' end
       return 'out/${variant:buildType}'
     end, -- this is used to specify generate directory for cmake, allows macro expansion, can be a string or a function returning the string, relative to cwd.
     cmake_compile_commands_options = {

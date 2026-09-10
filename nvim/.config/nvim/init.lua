@@ -37,8 +37,6 @@ require 'options'
 require 'autocmds'
 -- require 'load_test_lsp'
 
-vim.schedule(function()
-  require 'mappings'
-end)
+vim.schedule(function() require 'mappings' end)
 -- #vim: et:ts=4:sw=4
 -- load theme

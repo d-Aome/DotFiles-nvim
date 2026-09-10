@@ -1,9 +1,7 @@
 local nvchad_menu = require('nvchad.blink').menu
 
 -- 2. Force the padding to be a valid number
-if nvchad_menu.draw and nvchad_menu.draw.padding then
-  nvchad_menu.draw.padding = 1
-end
+if nvchad_menu.draw and nvchad_menu.draw.padding then nvchad_menu.draw.padding = 1 end
 
 return {
   -- Your custom nvim-cmp style mappings
@@ -13,7 +11,7 @@ return {
   appearance = { nerd_font_variant = 'mono' },
   completion = {
     keyword = {
-      range = 'full',
+      range = 'prefix',
     },
     list = { selection = { preselect = true, auto_insert = false } },
     documentation = {
@@ -84,13 +82,9 @@ return {
     sources = function()
       local type = vim.fn.getcmdtype()
       -- Search forward and backward
-      if type == '/' or type == '?' then
-        return { 'buffer' }
-      end
+      if type == '/' or type == '?' then return { 'buffer' } end
       -- Commands
-      if type == ':' or type == '@' then
-        return { 'cmdline', 'buffer' }
-      end
+      if type == ':' or type == '@' then return { 'cmdline', 'buffer' } end
       return {}
     end,
   },

@@ -4,6 +4,18 @@ return {
   --          Servers, Autocompletion, and Language-Specific Plugins            --
   -- ========================================================================== --
   {
+    'linux-cultist/venv-selector.nvim',
+    dependencies = {
+      { 'nvim-telescope/telescope.nvim', version = '*', dependencies = { 'nvim-lua/plenary.nvim' } }, -- optional: you can also use fzf-lua, snacks, mini-pick instead.
+    },
+    ft = 'python', -- Load when opening Python files
+    keys = { { ',v', '<cmd>VenvSelect<cr>' } }, -- Open picker on keymap
+    opts = {
+      options = {}, -- plugin-wide options
+      search = {}, -- custom search definitions
+    },
+  },
+  {
     'ThePrimeagen/refactoring.nvim',
     dependencies = {
       'lewis6991/async.nvim',
@@ -22,9 +34,7 @@ return {
     'williamboman/mason-lspconfig.nvim',
     event = { 'BufReadPre', 'BufNewFile' },
     dependencies = { 'nvim-lspconfig' },
-    config = function()
-      require 'configs.mason-lspconfig'
-    end,
+    config = function() require 'configs.mason-lspconfig' end,
   },
   {
     'folke/lazydev.nvim',
@@ -33,9 +43,7 @@ return {
         { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
       },
       enabled = function(root_dir)
-        if root_dir:match(vim.fn.stdpath 'config') then
-          return true
-        end
+        if root_dir:match(vim.fn.stdpath 'config') then return true end
         return false
       end,
     },
@@ -63,9 +71,7 @@ return {
     keys = {
       { '<leader>lf', '<cmd>Lspsaga finder<CR>', desc = 'LSPsaga finder' },
     },
-    config = function()
-      require('lspsaga').setup {}
-    end,
+    config = function() require('lspsaga').setup {} end,
     dependencies = {
       'nvim-treesitter/nvim-treesitter', -- optional
       'nvim-tree/nvim-web-devicons', -- optional
@@ -82,18 +88,14 @@ return {
       -- By passing a function here, rustaceanvim will silently wait.
       -- When you finally open a .rs file, it will call this function,
       -- which loads mason-registry and returns your config table!
-      vim.g.rustaceanvim = function()
-        return require('configs.rust').setup()
-      end
+      vim.g.rustaceanvim = function() return require('configs.rust').setup() end
     end,
   },
   {
     'saecki/crates.nvim',
     ft = { 'toml' },
     tag = 'stable',
-    config = function()
-      require 'configs.crates'
-    end,
+    config = function() require 'configs.crates' end,
   },
   {
     'pmizio/typescript-tools.nvim',
@@ -129,9 +131,7 @@ return {
   },
   {
     'HiPhish/rainbow-delimiters.nvim',
-    config = function()
-      require 'configs.rainbow'
-    end,
+    config = function() require 'configs.rainbow' end,
   },
   {
     'MeanderingProgrammer/render-markdown.nvim',
@@ -163,41 +163,34 @@ return {
     'zapling/mason-conform.nvim',
     event = 'VeryLazy',
     dependencies = { 'conform.nvim' },
-    config = function()
-      require 'configs.mason-conform'
-    end,
+    config = function() require 'configs.mason-conform' end,
   },
   {
     'stevearc/conform.nvim',
     events = 'BufWritePre',
     opts = {},
-    config = function()
-      require 'configs.conform'
-    end,
+    config = function() require 'configs.conform' end,
   },
   {
     'rshkarin/mason-nvim-lint',
     event = 'VeryLazy',
     dependencies = { 'nvim-lint' },
-    config = function()
-      require 'configs.mason-lint'
-    end,
+    config = function() require 'configs.mason-lint' end,
   },
   {
     'mfussenegger/nvim-lint',
     opts = {},
-    config = function()
-      require 'configs.lint'
-    end,
+    config = function() require 'configs.lint' end,
   },
   {
     -- snippet plugin
     'L3MON4D3/LuaSnip',
     build = 'make install_jsregexp',
-    dependencies = { 'rafamadriz/friendly-snippets', enabled = false },
+    dependencies = { 'rafamadriz/friendly-snippets' },
     opts = { history = true, updateevents = 'TextChanged,TextChangedI', enable_autosnippets = false },
     config = function(_, opts)
       require('luasnip').config.set_config(opts)
+      require 'nvchad.configs.luasnip'
     end,
   },
 
@@ -214,49 +207,37 @@ return {
       'williamboman/mason.nvim',
       'jay-babu/mason-nvim-dap.nvim',
     },
-    config = function()
-      require('configs.dap').core()
-    end,
+    config = function() require('configs.dap').core() end,
   },
   {
     'mfussenegger/nvim-dap-python',
     ft = 'python',
     dependencies = 'mfussenegger/nvim-dap',
-    config = function()
-      require('configs.dap').python()
-    end,
+    config = function() require('configs.dap').python() end,
   },
   {
     'leoluz/nvim-dap-go',
     ft = 'go',
     dependencies = 'mfussenegger/nvim-dap',
-    config = function()
-      require('configs.dap').go()
-    end,
+    config = function() require('configs.dap').go() end,
   },
   {
     'mxsdev/nvim-dap-vscode-js',
     ft = { 'typescript', 'javascript', 'typescriptreact', 'javascriptreact' },
     dependencies = { 'mfussenegger/nvim-dap' },
-    config = function()
-      require('configs.dap').javascript()
-    end,
+    config = function() require('configs.dap').javascript() end,
   },
   {
     'nvim-neotest/neotest',
     keys = {
       {
         '<leader>tr',
-        function()
-          require('neotest').run.run()
-        end,
+        function() require('neotest').run.run() end,
         desc = 'Test: Run Nearest',
       },
       {
         '<leader>tso',
-        function()
-          require('neotest').output.open { enter = true }
-        end,
+        function() require('neotest').output.open { enter = true } end,
         desc = 'Test: Show Output',
       },
       {
@@ -272,9 +253,7 @@ return {
       },
       {
         '<leader>ts',
-        function()
-          require('neotest').summary.toggle()
-        end,
+        function() require('neotest').summary.toggle() end,
         desc = 'Test: Toggle Summary',
       },
     },
@@ -300,14 +279,10 @@ return {
           require 'neotest-golang',
           require 'neotest-jest' {
             jetCommand = 'npm test --',
-            jestArguments = function(defaultArgs, _)
-              return defaultArgs
-            end,
+            jestArguments = function(defaultArgs, _) return defaultArgs end,
             jestConfigFile = 'custom.jest.config.ts',
             env = { CI = true },
-            cwd = function(_)
-              return vim.fn.getcwd()
-            end,
+            cwd = function(_) return vim.fn.getcwd() end,
             isTestFile = require('neotest-jest.jest-util').defaultIsTestFile,
           },
         },
@@ -322,13 +297,11 @@ return {
   {
     'nvim-telescope/telescope-frecency.nvim',
     version = '*',
-    config = function()
-      require('telescope').load_extension 'frecency'
-    end,
+    config = function() require('telescope').load_extension 'frecency' end,
   },
   {
     'nvim-telescope/telescope.nvim',
-    cmd = 'Telescope',
+    lazy = false,
     dependencies = {
       'nvim-treesitter/nvim-treesitter',
       { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
@@ -377,9 +350,7 @@ return {
           :find()
       end
 
-      map('n', '<leader>e', function()
-        toggle_telescope(harpoon:list())
-      end, { desc = 'Open harpoon window' })
+      map('n', '<leader>e', function() toggle_telescope(harpoon:list()) end, { desc = 'Open harpoon window' })
     end,
   },
   {
@@ -469,9 +440,7 @@ return {
         config = require('configs.noice').notify_config,
       },
     },
-    opts = function()
-      return require('configs.noice').noice_opts
-    end,
+    opts = function() return require('configs.noice').noice_opts end,
   },
   {
     'folke/trouble.nvim',
@@ -511,9 +480,7 @@ return {
     event = { 'BufReadPost', 'BufNewFile' },
     dependencies = { 'nvim-lua/plenary.nvim' },
     opts = require 'configs.todo-comments',
-    config = function(_, opts)
-      require('todo-comments').setup(opts)
-    end,
+    config = function(_, opts) require('todo-comments').setup(opts) end,
   },
 
   -- ========================================================================== --
@@ -545,9 +512,7 @@ return {
   {
     'jeangiraldoo/codedocs.nvim',
     lazy = false,
-    config = function()
-      require('codedocs').setup {}
-    end,
+    config = function() require('codedocs').setup {} end,
   },
   { 'wakatime/vim-wakatime', event = 'VeryLazy' },
   {
@@ -559,16 +524,12 @@ return {
     event = 'VeryLazy',
     keys = { '<leader>', '<c-w>', '"', '\'', '`', 'c', 'v', 'g' },
     cmd = 'WhichKey',
-    opts = function()
-      dofile(vim.g.base46_cache .. 'whichkey')
-    end,
+    opts = function() dofile(vim.g.base46_cache .. 'whichkey') end,
   },
   {
     'nmac427/guess-indent.nvim',
     event = 'VeryLazy',
-    config = function()
-      require 'configs.guess-indent'
-    end,
+    config = function() require 'configs.guess-indent' end,
   },
   {
     'nvim-mini/mini.nvim',
@@ -578,9 +539,7 @@ return {
       'nvim-treesitter/nvim-treesitter-textobjects',
     },
     version = false,
-    config = function()
-      require 'configs.mini'
-    end,
+    config = function() require 'configs.mini' end,
   },
   {
     'Civitasv/cmake-tools.nvim',
@@ -601,9 +560,7 @@ return {
     ---@module 'overseer'
     ---@type overseer.SetupOpts
     opts = {},
-    config = function(_)
-      require('overseer').setup()
-    end,
+    config = function(_) require('overseer').setup() end,
   },
   {
     'chrisgrieser/nvim-early-retirement',
@@ -630,9 +587,7 @@ return {
     cmd = 'URLOpenUnderCursor',
     config = function()
       local status_ok, url_open = pcall(require, 'url-open')
-      if not status_ok then
-        return
-      end
+      if not status_ok then return end
       url_open.setup {}
     end,
   },

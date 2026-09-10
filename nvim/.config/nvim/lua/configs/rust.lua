@@ -41,8 +41,6 @@ M.setup = function()
           },
         },
       },
-      -- Note: I moved on_attach INSIDE the server table.
-      -- rustaceanvim expects it here, not at the root!
     },
   }
   return config

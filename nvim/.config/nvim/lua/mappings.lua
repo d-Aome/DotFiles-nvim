@@ -5,6 +5,7 @@ local map = vim.keymap.set
 -- ========================================================================== --
 -- This registers the group names so the menu shows "+Find", "+Git", etc.
 local wk = require 'which-key'
+local filetype = require 'vim.filetype'
 wk.add {
   { '<leader>c', group = 'Code / LSP' },
   { '<leader>f', group = 'Find (Telescope)' },
@@ -75,13 +76,9 @@ map('n', 'gx', '<cmd>:URLOpenUnderCursor<CR>')
 -- ========================================================================== --
 --                           LSP & FORMATTING                                --
 -- ========================================================================== --
-map('n', '<leader>roc', function()
-  vim.cmd.RustLsp 'openCargo'
-end, { desc = 'RustLsp: Open Cargo.toml' })
+map('n', '<leader>roc', function() vim.cmd.RustLsp 'openCargo' end, { desc = 'RustLsp: Open Cargo.toml' })
 
-map('n', '<leader>rod', function()
-  vim.cmd.RustLsp 'openDocs'
-end, { desc = 'Rust: Open Docs (under cursor)' })
+map('n', '<leader>rod', function() vim.cmd.RustLsp 'openDocs' end, { desc = 'Rust: Open Docs (under cursor)' })
 
 vim.keymap.set({ 'n', 'x' }, '<leader>ca', function()
   if vim.bo.filetype == 'rust' then
@@ -93,43 +90,52 @@ end, { noremap = true, silent = true })
 map('n', '<leader>ds', vim.diagnostic.setloclist, { desc = 'LSP Diagnostic Loclist' })
 
 -- Formatting
-map({ 'n', 'x' }, '<leader>fm', function()
-  require('conform').format { lsp_fallback = true }
-end, { desc = 'Format Buffer' })
+map(
+  { 'n', 'x' },
+  '<leader>fm',
+  function() require('conform').format { lsp_fallback = true } end,
+  { desc = 'Format Buffer' }
+)
 
 map('n', 'K', function()
   -- Check if we are in a Cargo.toml file
   if vim.fn.expand '%:t' == 'Cargo.toml' then
     require('crates').show_popup()
-  else
-    vim.cmd 'Lspsaga hover_doc'
+    return
   end
+
+  if vim.bo.filetype == 'c' or vim.bo.filetype == 'cpp' then
+    local cword = vim.fn.expand '<cword>'
+    if cword ~= '' then
+      -- pcall prevents Neovim from throwing an uncaught error if man fails
+      local ok = pcall(vim.cmd, 'vertical Man ' .. cword)
+      if ok then return end
+    end
+  end
+
+  -- Default fallback for code documentation
+  vim.cmd 'Lspsaga hover_doc'
 end, { desc = 'Hover doc (Lspsaga / crates.nvim)' })
 
-vim.keymap.set('n', 'gK', function()
-  require('hover').enter()
-end, { desc = 'hover.nvim (enter)' })
+vim.keymap.set('n', 'gK', function() require('hover').enter() end, { desc = 'hover.nvim (enter)' })
 
 -- Todo comments
-vim.keymap.set('n', ']t', function()
-  require('todo-comments').jump_next()
-end, { desc = 'Next todo comment' })
+vim.keymap.set('n', ']t', function() require('todo-comments').jump_next() end, { desc = 'Next todo comment' })
 
-vim.keymap.set('n', '[t', function()
-  require('todo-comments').jump_prev()
-end, { desc = 'Previous todo comment' })
+vim.keymap.set('n', '[t', function() require('todo-comments').jump_prev() end, { desc = 'Previous todo comment' })
 
 -- You can also specify a list of valid jump keywords
 
-vim.keymap.set('n', ']t', function()
-  require('todo-comments').jump_next { keywords = { 'ERROR', 'WARNING' } }
-end, { desc = 'Next error/warning todo comment' })
+vim.keymap.set(
+  'n',
+  ']t',
+  function() require('todo-comments').jump_next { keywords = { 'ERROR', 'WARNING' } } end,
+  { desc = 'Next error/warning todo comment' }
+)
 -- -- Git (Neogit) --
 map('n', '<leader>gg', '<cmd>Neogit<cr>', { desc = 'Open Neogit' })
 -- -- Themes (NvChad) --
-map('n', '<leader>th', function()
-  require('nvchad.themes').open()
-end, { desc = 'NvChad Themes' })
+map('n', '<leader>th', function() require('nvchad.themes').open {} end, { desc = 'NvChad Themes' })
 
 -- -- Trouble --
 map('n', '<leader>xx', '<cmd>Trouble diagnostics toggle<cr>', { desc = 'Trouble: Diagnostics' })
@@ -150,16 +156,17 @@ map('n', '<leader>nd', '<cmd>NoiceDismiss<CR>', { desc = 'Dismiss Notifications'
 
 -- -- WhichKey Direct --
 map('n', '<leader>wK', '<cmd>WhichKey <CR>', { desc = 'Show All Keymaps' })
-map('n', '<leader>wk', function()
-  vim.cmd('WhichKey ' .. vim.fn.input 'WhichKey: ')
-end, { desc = 'WhichKey Lookup' })
+map('n', '<leader>wk', function() vim.cmd('WhichKey ' .. vim.fn.input 'WhichKey: ') end, { desc = 'WhichKey Lookup' })
 -- Overseer --
 
 map('n', '<leader>to', '<cmd>OverseerToggle <CR>', { desc = 'Toggle Overseer Output Buffer' })
 map('n', '<leader>cd', '<cmd>Codedocs<CR>', { desc = 'Insert annotation' })
-vim.keymap.set('n', '<leader>ih', function()
-  vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-end, { desc = 'Toggle Inlay Hints' })
+vim.keymap.set(
+  'n',
+  '<leader>ih',
+  function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end,
+  { desc = 'Toggle Inlay Hints' }
+)
 
 map('x', '<leader>re', ':Refactor extract ')
 map('x', '<leader>rf', ':Refactor extract_to_file ')
@@ -184,16 +191,10 @@ local harpoon = require 'harpoon'
 harpoon:setup { settings = { save_on_toggle = true, sync_on_ui_close = true } }
 
 -- Actions
-map('n', '<leader>a', function()
-  harpoon:list():add()
-end, { desc = 'Harpoon: Add File' })
-map('n', '<leader>he', function()
-  harpoon.ui:toggle_quick_menu(harpoon:list())
-end, { desc = 'Harpoon: Menu' })
+map('n', '<leader>a', function() harpoon:list():add() end, { desc = 'Harpoon: Add File' })
+map('n', '<leader>he', function() harpoon.ui:toggle_quick_menu(harpoon:list()) end, { desc = 'Harpoon: Menu' })
 
 -- Navigation (1-9)
 for i = 1, 9 do
-  map('n', '<leader>' .. i, function()
-    harpoon:list():select(i)
-  end, { desc = 'Harpoon: Go to ' .. i })
+  map('n', '<leader>' .. i, function() harpoon:list():select(i) end, { desc = 'Harpoon: Go to ' .. i })
 end
