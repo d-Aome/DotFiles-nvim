@@ -76,6 +76,7 @@ vim.lsp.config('clangd', { -- nvim 0.11
   cmd = {
     'clangd',
     '--fallback-style=-std=c23',
+    '--clang-tidy',
   },
   on_init = on_init,
   capabilities = capabilities,
@@ -131,9 +132,7 @@ vim.lsp.config('lua_ls', { -- nvim 0.11
 -- asm lsp
 vim.lsp.config('asm_lsp', {
   filetypes = { 'asm', 's', 'S' },
-  root_dir = function(fname)
-    return lspconfig.util.find_git_ancestor(fname) or vim.loop.os_homedir()
-  end,
+  root_dir = function(fname) return lspconfig.util.find_git_ancestor(fname) or vim.loop.os_homedir() end,
 })
 -- Neocmake with formatting enabled
 vim.lsp.config('neocmake', {

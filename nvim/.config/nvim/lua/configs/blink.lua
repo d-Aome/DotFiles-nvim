@@ -111,5 +111,6 @@ return {
       },
       lazydev = { module = 'lazydev.integrations.blink', score_offset = 5 },
     },
+    max_items = 10,
   },
 }

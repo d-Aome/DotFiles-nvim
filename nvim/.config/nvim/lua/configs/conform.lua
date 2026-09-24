@@ -40,16 +40,18 @@ local options = {
                 ColumnLimit: 120, \
                 AccessModifierOffset: 0,\
                 IndentAccessModifiers: true, \
+                ContinuationIndentWidth: 4, \
                 PackConstructorInitializers: Never, \
                 SortIncludes: false, \
-                AlignArrayOfStructures: None, \
+                AlignArrayOfStructures: Left, \
+                KeepEmptyLinesAtTheStartOfBlocks: true, \
                 AlignAfterOpenBracket: BlockIndent, \
-                Cpp11BracedListStyle: true, \
+                Cpp11BracedListStyle: false, \
                 BinPackArguments: true, \
                 BinPackParameters: true, \
                 DerivePointerAlignment: false,\
                 AllowShortFunctionsOnASingleLine: None,\
-                PointerAlignment: Left }',
+                PointerAlignment: Right }',
       },
     },
     ['stylua'] = {
